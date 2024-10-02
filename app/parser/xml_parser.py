@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict, Generator
 
 from lxml.etree import iterparse, Element
@@ -39,12 +40,12 @@ class XmlParser:
             "price_after_discount": offer.findtext("price"),
             "bonuses": offer.findtext("bonuses"),
             "sales": offer.findtext("sales"),
-            "updated_at": offer.findtext("modified_time"),
+            "updated_at": datetime.fromtimestamp(int(offer.findtext("modified_time"))),
             "currency": offer.findtext("currencyId"),
             "barcode": offer.findtext("barcode"),
         }
 
-    def parse_offers(self) -> Generator[Dict[str, Any]]:
+    def parse_offers(self) -> Generator[Dict[str, Any], None, None]:
         for event, offers in iterparse(self.file_path, tag="offers"):
             for offer in offers:
                 yield self.parse_offer(offer)

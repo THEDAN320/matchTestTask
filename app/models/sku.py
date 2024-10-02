@@ -5,7 +5,11 @@ from sqlalchemy import (
 )
 
 
-class Sku(DeclarativeBase):
+class Base(DeclarativeBase):
+    pass
+
+
+class Sku(Base):
     __tablename__ = "sku"
     __table_args__ = (
         Index("sku_brand_index", "brand"),

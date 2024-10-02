@@ -1,4 +1,4 @@
-from .sku import Sku
+from .sku import Sku, Base
 
 
-__all__ = ["Sku"]
+__all__ = ["Sku"], "Base"

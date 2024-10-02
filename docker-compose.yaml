@@ -1,0 +1,7 @@
+services:
+    elasticsearch:
+        image: "elasticsearch:8.15.2"
+        environment:
+         - discovery.type=single-node
+        ports:
+         - "9200:9200"
