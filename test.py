@@ -1,4 +1,3 @@
-from elasticsearch import Elasticsearch
+import os
 
-client = Elasticsearch("http://elasticsearch:9200")
-print(client.connector)
+print(os.system("curl http://localhost:9200"))

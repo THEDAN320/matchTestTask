@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.configs.config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
+from app.configs.connections import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 
 
 CONNECTION_URL = f"postgresql+psycopg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"

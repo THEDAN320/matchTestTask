@@ -45,3 +45,34 @@ class Sku(Base):
     currency = Column(TEXT, nullable=True)
     barcode = Column(BIGINT, nullable=True, comment="Штрихкод")
     similar_sku = Column(ARRAY(UUID(as_uuid=True)), nullable=True)  # type: ignore
+
+    def read(self):
+        return {
+            "uuid": self.uuid,
+            "marketplace_id": self.marketplace_id,
+            "product_id": self.product_id,
+            "title": self.title,
+            "description": self.description,
+            "brand": self.brand,
+            "seller_id": self.seller_id,
+            "seller_name": self.seller_name,
+            "first_image_url": self.first_image_url,
+            "category_id": self.category_id,
+            "category_lvl_1": self.category_lvl_1,
+            "category_lvl_2": self.category_lvl_2,
+            "category_lvl_3": self.category_lvl_3,
+            "category_remaining": self.category_remaining,
+            "features": self.features,
+            "rating_count": self.rating_count,
+            "rating_value": self.rating_value,
+            "price_before_discounts": self.price_before_discounts,
+            "discount": self.discount,
+            "price_after_discounts": self.price_after_discounts,
+            "bonuses": self.bonuses,
+            "sales": self.sales,
+            "inserted_at": self.inserted_at,
+            "updated_at": self.updated_at,
+            "currency": self.currency,
+            "barcode": self.barcode,
+            "similar_sku": self.similar_sku,
+        }

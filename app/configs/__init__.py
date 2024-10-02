@@ -1,8 +1,10 @@
-from . import config
+from . import connections
 from . import database
+from . import elasticsearch
 
 
 __all__ = [
-    "config",
-    "database"
+    "connections",
+    "elasticsearch",
+    "database",
 ]

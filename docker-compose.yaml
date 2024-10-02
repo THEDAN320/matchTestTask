@@ -7,22 +7,43 @@ services:
     environment:
       - node.name=elasticsearch
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - xpack.security.enabled=false
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
-      interval: 10s
-      retries: 5
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      test: ["CMD-SHELL", "curl -f http://localhost:9200"]
+      interval: 15s
+      retries: 15
     ports:
       - 9200:9200
-      - 9300:9300
     networks:
       - sharednet
 
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
+      interval: 10s
+      retries: 5
+    ports:
+      - 5433:5432
+    networks:
+      - sharednet
+
+  app:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: main
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
+    networks:
+      - sharednet
 
 networks:
     sharednet:
