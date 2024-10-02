@@ -1,7 +1,29 @@
+version: '3'
+
 services:
-    elasticsearch:
-        image: "elasticsearch:8.15.2"
-        environment:
-         - discovery.type=single-node
-        ports:
-         - "9200:9200"
+  elasticsearch:
+    image: "elasticsearch:8.15.2"
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      retries: 5
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - sharednet
+
+
+networks:
+    sharednet:
+        driver: bridge
