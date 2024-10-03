@@ -1,6 +1,4 @@
-from typing import List
 import os
-
 
 if os.name == "nt":
     sep = "\\"
@@ -10,9 +8,9 @@ else:
 files_path = f"{os.getcwd()}{sep}files"
 
 
-def get_files_list() -> List[str]:
+def get_files_list() -> list[str]:
     files = os.listdir(files_path)
-    files = list(filter(lambda x: x != ".gitignore", files))
+    files = list(filter(lambda x: ".xml" in x, files))
     return files
 
 
