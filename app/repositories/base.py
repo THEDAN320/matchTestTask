@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Protocol, Dict, Any, runtime_checkable
+from typing import Protocol, Dict, Any, runtime_checkable, Generator
 from uuid import UUID
 
 from sqlalchemy import insert, update, select
@@ -48,7 +48,7 @@ class Repository(AbstractRepository):
             except DataError:
                 session.rollback()
 
-    def get_all(self, filter_by: dict) -> list[dict[str, Any]]:
+    def get_all(self, filter_by: dict) -> Generator[dict[str, Any]]:
         with database_session.begin() as session:
             results = (
                 session.execute(
@@ -57,4 +57,15 @@ class Repository(AbstractRepository):
                 .scalars()
                 .all()
             )
-            return (result for result in results)
+            return (result.read() for result in results)
+
+    def get_range(self, offset: int = 0, count: int = 1000) -> Generator[dict[str, Any]]:
+        with database_session.begin() as session:
+            results = (
+                session.execute(
+                    select(self.model).limit(count).offset(offset)
+                )
+                .scalars()
+                .all()
+            )
+            return (result.read() for result in results)

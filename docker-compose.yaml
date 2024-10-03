@@ -10,8 +10,8 @@ services:
       - xpack.security.enabled=false
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200"]
-      interval: 15s
-      retries: 15
+      interval: 5s
+      retries: 50
     ports:
       - 9200:9200
     networks:
