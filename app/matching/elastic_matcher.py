@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Generator
 
 from elasticsearch import helpers
 
@@ -12,31 +12,27 @@ class ElasticMatcher:
         self.client = get_client()
         self.indexer = Indexer()
 
-    def indexing(self, data: List[Dict[str, Any]]) -> None:
+    def indexing(self, data: Generator[Dict[str, Any], None, None]) -> None:
         indices = self.indexer.indexing(self.index, data)
         helpers.bulk(self.client, indices)
 
-    def matching(self, data: Dict[str, Any]) -> Optional[List[str]]:
-        match_products = self.client.search(
-            index="products",
+    def match(self, data: Dict[str, Any]) -> List[str]:
+        match_data = self.client.search(
+            index=self.index,
             query={
                 "bool": {
                     "must": [
-                        {"match": {"category_lvl_3": data["category_lvl_3"]}},
-                        {"match": {"brand": data["brand"]}},
+                        {"match": {"brand": data.get("brand")}},
+                        {"match": {"category": data.get("category_lvl_3") or data.get("category_lvl_2") or data.get("category_lvl_1")}},
                     ]
                 }
             },
             size=5,
         )
-
-        if match_products["hits"]["total"]["value"] > 0:
-            products = []
-            for hit in match_products["hits"]["hits"]:
-                products.append(hit["_source"])
-            return products
-        else:
-            return None
-
-    def delete_index(self) -> None:
-        self.client.indices.delete(index=self.index)
+        results: list[str] = []
+        if match_data["hits"]["total"]["value"] > 0:
+            data_uuid = str(data["uuid"])
+            for hit in match_data["hits"]["hits"]:
+                if data_uuid != hit["_id"]:
+                    results.append(hit["_id"])
+        return results

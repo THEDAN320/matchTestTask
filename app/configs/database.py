@@ -8,4 +8,4 @@ CONNECTION_URL = f"postgresql+psycopg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/
 
 engine = create_engine(CONNECTION_URL)
 
-database_session = sessionmaker(engine, expire_on_commit=True)
+database_session = sessionmaker(engine, expire_on_commit=False)

@@ -17,8 +17,3 @@ class SKUService:
 
     def get_all(self, filter_by: dict) -> Generator[dict[str, Any], None, None]:
         return self.sku_repository.get_all(filter_by)
-
-    def get_range(
-        self, offset: int = 0, count: int = 1000
-    ) -> Generator[dict[str, Any], None, None]:
-        return self.sku_repository.get_range(offset, count)

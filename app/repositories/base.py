@@ -25,12 +25,6 @@ class AbstractRepository(Protocol):
     def get_all(self, filter_by: dict) -> Generator[dict[str, Any], None, None]:
         raise NotImplementedError
 
-    @abstractmethod
-    def get_range(
-        self, offset: int = 0, count: int = 1000
-    ) -> Generator[dict[str, Any], None, None]:
-        raise NotImplementedError
-
 
 class Repository(AbstractRepository):
     def add(self, data: dict[str, Any]) -> None:
@@ -59,17 +53,6 @@ class Repository(AbstractRepository):
         with database_session.begin() as session:
             results = (
                 session.execute(select(self.model).filter_by(**filter_by))
-                .scalars()
-                .all()
-            )
-            return (result.read() for result in results)
-
-    def get_range(
-        self, offset: int = 0, count: int = 1000
-    ) -> Generator[dict[str, Any], None, None]:
-        with database_session.begin() as session:
-            results = (
-                session.execute(select(self.model).limit(count).offset(offset))
                 .scalars()
                 .all()
             )

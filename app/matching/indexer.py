@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Dict, Any, Generator
 
 
 class Indexer:
@@ -11,7 +11,7 @@ class Indexer:
             "category": data.get("category_lvl_3") or data.get("category_lvl_2") or data.get("category_lvl_1")
         }
 
-    def indexing(self, index: str, data: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        return [
+    def indexing(self, index: str, data: Generator[Dict[str, Any], None, None]) -> Generator[Dict[str, Any], None, None]:
+        return (
             {"_index": index, "_id": item.get("uuid"), "_source": self.preparing_data(item)} for item in data
-        ]
+        )
